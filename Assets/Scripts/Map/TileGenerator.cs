@@ -5,16 +5,17 @@ public class TileGenerator : MonoBehaviour {
 
   public TextAsset map_file;
   public Transform tile_prefab;
+  public Transform tile_container;
 
   public Sprite empty_tile;
   public Sprite wall_tile;
 
-  public const int TILE_SIZE = 10;
+  public const int TILE_SIZE = 1;
 
   void Start() {
     string[] lines = map_file.text.Split("\n" [0]);
     for (int i = 0; i < lines.Length; i++) {
-      process_line(i, lines[i]);
+      process_line(lines.Length - i - 2, lines[i]);
     }
   }
 
@@ -26,7 +27,9 @@ public class TileGenerator : MonoBehaviour {
 
   private void render_tile(Vector2 location, Sprite sprite) {
     Transform tile_transform = Instantiate(tile_prefab) as Transform;
-    tile_transform.localPosition = location * TILE_SIZE;
+    tile_transform.parent = tile_container;
+    tile_transform.localPosition = MapHelper.grid_to_world_location(location);
+
     SpriteRenderer sprite_renderer = tile_transform.GetComponent<SpriteRenderer>();
     sprite_renderer.sprite = sprite;
   }
