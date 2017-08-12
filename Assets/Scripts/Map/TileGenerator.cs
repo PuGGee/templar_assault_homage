@@ -6,6 +6,7 @@ public class TileGenerator : MonoBehaviour {
   public TextAsset map_file;
   public Transform tile_prefab;
   public Transform tile_container;
+  public Transform map;
 
   public Sprite empty_tile;
   public Sprite wall_tile;
@@ -32,6 +33,8 @@ public class TileGenerator : MonoBehaviour {
 
     SpriteRenderer sprite_renderer = tile_transform.GetComponent<SpriteRenderer>();
     sprite_renderer.sprite = sprite;
+
+    map.GetComponent<Map>().add_tile(location, tile_transform);
   }
 
   private Sprite sprite_for(string token) {

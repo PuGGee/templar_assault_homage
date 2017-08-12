@@ -4,6 +4,7 @@ using System.Collections;
 public class Game : MonoBehaviour {
 
   public Transform templar_transform;
+  public Transform map;
 
   private Phase _phase;
 
@@ -14,7 +15,9 @@ public class Game : MonoBehaviour {
 
   void Update() {
     if (Input.GetMouseButtonDown(0)) {
-      Debug.Log(MapHelper.screen_to_grid_location(Input.mousePosition));
+      var grid_location = MapHelper.screen_to_grid_location(Input.mousePosition);
+      var target = map.GetComponent<Map>().get_tile_at(grid_location);
+      Destroy(target.gameObject);
     }
   }
 
