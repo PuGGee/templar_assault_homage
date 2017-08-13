@@ -22,17 +22,20 @@ public class TileGenerator : MonoBehaviour {
 
   private void process_line(int y, string line) {
     for (int i = 0; i < line.Length; i++ ) {
-      render_tile(new Vector2(i, y), sprite_for(line[i].ToString()));
+      render_tile(new Vector2(i, y), line[i].ToString());
     }
   }
 
-  private void render_tile(Vector2 location, Sprite sprite) {
+  private void render_tile(Vector2 location, string tile_type) {
     Transform tile_transform = Instantiate(tile_prefab) as Transform;
     tile_transform.parent = tile_container;
     tile_transform.localPosition = MapHelper.grid_to_world_location(location);
 
+    var script = tile_transform.GetComponent<Tile>();
+    script.type = tile_type;
+
     SpriteRenderer sprite_renderer = tile_transform.GetComponent<SpriteRenderer>();
-    sprite_renderer.sprite = sprite;
+    sprite_renderer.sprite = sprite_for(tile_type);
 
     map.GetComponent<Map>().add_tile(location, tile_transform);
   }

@@ -3,5 +3,11 @@ using System.Collections;
 
 public abstract class Phase {
 
-  public abstract void click(Transform target);
+  protected Map map;
+
+  public Phase(Map map) {
+    this.map = map;
+  }
+
+  public abstract void click(Vector2 grid_location);
 }
