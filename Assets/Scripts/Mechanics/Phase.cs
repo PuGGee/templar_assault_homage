@@ -10,4 +10,5 @@ public abstract class Phase {
   }
 
   public abstract void click(Vector2 grid_location);
+  public abstract Phase next_phase();
 }

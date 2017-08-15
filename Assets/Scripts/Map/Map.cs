@@ -62,4 +62,24 @@ public class Map : MonoBehaviour {
     remove_actor_at(grid_location);
     add_actor(new_grid_location, actor);
   }
+
+  public List<Transform> actors() {
+    var result = new List<Transform>();
+    foreach (var sub_dict in _actors.Values) {
+      foreach (var transform in sub_dict.Values) {
+        result.Add(transform);
+      }
+    }
+    return result;
+  }
+
+  public List<Alien> aliens() {
+    var result = new List<Alien>();
+    foreach (var transform in actors()) {
+      if (transform.GetComponent<Alien>()) {
+        result.Add(transform.GetComponent<Alien>());
+      }
+    }
+    return result;
+  }
 }

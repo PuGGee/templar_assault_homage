@@ -9,6 +9,7 @@ public class Templar : MonoBehaviour {
 
   public int shots;
   public int damage;
+  public int accuracy;
 
   private int _health;
 
