@@ -20,18 +20,37 @@ public class Game : MonoBehaviour {
   }
 
   void Start() {
+    foreach (var tile in map.tiles()) {
+      tile.OnClick += click;
+    }
     set_position();
     spawn_templar(new Vector2(2, 1));
     spawn_alien(new Vector2(4, 6));
   }
 
+  void click(Vector2 grid_location) {
+    _phase.click(grid_location);
+  }
+
   void Update() {
-    if (Input.GetMouseButtonDown(0)) {
-      var grid_location = MapHelper.screen_to_grid_location(Input.mousePosition);
-      _phase.click(grid_location);
-    }
     if (Input.GetKeyDown("n")) {
       _phase = _phase.next_phase();
+      foreach (var templar in map.templars()) {
+        templar.reset_turn();
+      }
+    }
+
+    if (Input.GetKeyDown("w")) {
+      _phase.keypress("w");
+    }
+    if (Input.GetKeyDown("a")) {
+      _phase.keypress("a");
+    }
+    if (Input.GetKeyDown("s")) {
+      _phase.keypress("s");
+    }
+    if (Input.GetKeyDown("d")) {
+      _phase.keypress("d");
     }
   }
 

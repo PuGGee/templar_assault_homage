@@ -6,17 +6,14 @@ public class MovementPhase : Phase {
 
   private Templar _selected_unit;
   private Vector2 _selected_grid_location;
-  private List<Templar> _moved_units;
 
   public MovementPhase(Map map) : base(map) {
-    _moved_units = new List<Templar>();
     Debug.Log("Movement Phase");
   }
 
   public override void click(Vector2 grid_location) {
     var target = map.get_actor_at(grid_location);
     var tile = map.get_tile_at(grid_location);
-
     if (target != null) {
       var templar = target.GetComponent<Templar>();
       if (templar != null) {
@@ -26,12 +23,22 @@ public class MovementPhase : Phase {
     } else {
       if (_selected_unit != null) {
         var script = tile.GetComponent<Tile>();
-        if (script.type == " " && valid_move(_selected_grid_location, grid_location, _selected_unit.movement) && !_moved_units.Contains(_selected_unit)) {
+        if (script.type == " " && valid_move(_selected_grid_location, grid_location, _selected_unit.movement) && _selected_unit.moved < 1) {
           _selected_unit.move(_selected_grid_location, grid_location);
-          _moved_units.Add(_selected_unit);
-          _selected_unit = null;
         }
       }
+    }
+  }
+
+  public override void keypress(string key) {
+    if (key == "w") {
+      _selected_unit.turn_to(Templar.UP);
+    } else if (key == "s") {
+      _selected_unit.turn_to(Templar.DOWN);
+    } else if (key == "a") {
+      _selected_unit.turn_to(Templar.LEFT);
+    } else if (key == "d") {
+      _selected_unit.turn_to(Templar.RIGHT);
     }
   }
 

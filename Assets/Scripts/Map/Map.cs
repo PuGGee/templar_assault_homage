@@ -4,11 +4,23 @@ using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
 
-  private Dictionary<int, Dictionary<int, Transform>> _tiles;
+  private Dictionary<int, Dictionary<int, Transform>> _grid;
   private Dictionary<int, Dictionary<int, Transform>> _actors;
 
+  public int width {
+    get {
+      return _grid.Values.Count;
+    }
+  }
+
+  public int height {
+    get {
+      return _grid[0].Values.Count;
+    }
+  }
+
   void Awake() {
-    _tiles = new Dictionary<int, Dictionary<int, Transform>>();
+    _grid = new Dictionary<int, Dictionary<int, Transform>>();
     _actors = new Dictionary<int, Dictionary<int, Transform>>();
   }
 
@@ -19,16 +31,16 @@ public class Map : MonoBehaviour {
   public void add_tile(Vector2 grid_location, Transform transform) {
     var grid_x = (int)grid_location.x;
     var grid_y = (int)grid_location.y;
-    if (!_tiles.ContainsKey(grid_x)) {
-      _tiles[grid_x] = new Dictionary<int, Transform>();
+    if (!_grid.ContainsKey(grid_x)) {
+      _grid[grid_x] = new Dictionary<int, Transform>();
     }
-    _tiles[grid_x][grid_y] = transform;
+    _grid[grid_x][grid_y] = transform;
   }
 
   public Transform get_tile_at(Vector2 grid_location) {
     var grid_x = (int)grid_location.x;
     var grid_y = (int)grid_location.y;
-    return _tiles[grid_x][grid_y];
+    return _grid[grid_x][grid_y];
   }
 
   public void add_actor(Vector2 grid_location, Transform transform) {
@@ -57,6 +69,21 @@ public class Map : MonoBehaviour {
     }
   }
 
+  public Vector2 actor_location(Transform actor) {
+    for (int grid_x = 0; grid_x < width; grid_x++) {
+      if (_actors.ContainsKey(grid_x)) {
+        for (int grid_y = 0; grid_y < height; grid_y++) {
+          if (_actors[grid_x].ContainsKey(grid_y)) {
+            if (_actors[grid_x][grid_y] == actor) {
+              return new Vector2(grid_x, grid_y);
+            }
+          }
+        }
+      }
+    }
+    return new Vector2(-1, -1);
+  }
+
   public void move_actor(Vector2 grid_location, Vector2 new_grid_location) {
     var actor = get_actor_at(grid_location);
     remove_actor_at(grid_location);
@@ -78,6 +105,26 @@ public class Map : MonoBehaviour {
     foreach (var transform in actors()) {
       if (transform.GetComponent<Alien>()) {
         result.Add(transform.GetComponent<Alien>());
+      }
+    }
+    return result;
+  }
+
+  public List<Templar> templars() {
+    var result = new List<Templar>();
+    foreach (var transform in actors()) {
+      if (transform.GetComponent<Templar>()) {
+        result.Add(transform.GetComponent<Templar>());
+      }
+    }
+    return result;
+  }
+
+  public List<Tile> tiles() {
+    var result = new List<Tile>();
+    foreach (var sub_dict in _grid.Values) {
+      foreach (var transform in sub_dict.Values) {
+        result.Add(transform.GetComponent<Tile>());
       }
     }
     return result;

@@ -9,6 +9,8 @@ public abstract class Phase {
     this.map = map;
   }
 
+  public virtual void keypress(string key) {}
+
   public abstract void click(Vector2 grid_location);
   public abstract Phase next_phase();
 }

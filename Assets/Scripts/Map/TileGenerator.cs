@@ -13,7 +13,7 @@ public class TileGenerator : MonoBehaviour {
 
   public const int TILE_SIZE = 1;
 
-  void Start() {
+  void Awake() {
     string[] lines = map_file.text.Split("\n" [0]);
     for (int i = 0; i < lines.Length; i++) {
       process_line(lines.Length - i - 2, lines[i]);
@@ -33,6 +33,7 @@ public class TileGenerator : MonoBehaviour {
 
     var script = tile_transform.GetComponent<Tile>();
     script.type = tile_type;
+    script.grid_location = location;
 
     SpriteRenderer sprite_renderer = tile_transform.GetComponent<SpriteRenderer>();
     sprite_renderer.sprite = sprite_for(tile_type);
