@@ -40,7 +40,11 @@ public class Map : MonoBehaviour {
   public Transform get_tile_at(Vector2 grid_location) {
     var grid_x = (int)grid_location.x;
     var grid_y = (int)grid_location.y;
-    return _grid[grid_x][grid_y];
+    if (_grid.ContainsKey(grid_x) && _grid[grid_x].ContainsKey(grid_y)) {
+      return _grid[grid_x][grid_y];
+    } else {
+      return null;
+    }
   }
 
   public void add_actor(Vector2 grid_location, Transform transform) {

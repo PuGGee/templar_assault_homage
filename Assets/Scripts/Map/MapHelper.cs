@@ -10,9 +10,4 @@ public class MapHelper {
     float y = grid_location.y * TileGenerator.TILE_SIZE + TileGenerator.TILE_SIZE * 0.5f;
     return new Vector2(x, y);
   }
-
-  public static Vector2 screen_to_grid_location(Vector2 screen_location_pixels) {
-    var scaled_vector = screen_location_pixels / PIXELS;
-    return new Vector2(Mathf.Floor(scaled_vector.x), Mathf.Floor(scaled_vector.y));
-  }
 }
