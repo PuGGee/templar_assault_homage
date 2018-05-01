@@ -4,15 +4,15 @@ using System.Collections.Generic;
 
 public class PathFinder {
 
-  private Map _map;
+  private IPathable _grid;
   private Vector2 _start;
   private List<Vector2> _targets;
 
   private List<Vector2> traversed_squares;
   private List<Node> end_nodes;
 
-  public PathFinder(Map map, Vector2 start, List<Vector2> targets) {
-    _map = map;
+  public PathFinder(IPathable grid, Vector2 start, List<Vector2> targets) {
+    _grid = grid;
     _start = start;
     _targets = targets;
 
@@ -98,8 +98,7 @@ public class PathFinder {
   }
 
   private bool square_empty(float x, float y) {
-    var tile = _map.get_tile_at(new Vector2(x, y));
-    return tile != null && tile.GetComponent<Tile>().type == " ";
+    return _grid.location_pathable(new Vector2(x, y));
   }
 
   public class Node {

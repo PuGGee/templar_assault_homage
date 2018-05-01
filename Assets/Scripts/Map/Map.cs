@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Map : MonoBehaviour {
+public class Map : MonoBehaviour, IPathable {
 
   private Dictionary<int, Dictionary<int, Transform>> _grid;
   private Dictionary<int, Dictionary<int, Transform>> _actors;
@@ -45,6 +45,11 @@ public class Map : MonoBehaviour {
     } else {
       return null;
     }
+  }
+
+  public bool location_pathable(Vector2 grid_location) {
+    var tile = get_tile_at(grid_location);
+    return tile != null && tile.GetComponent<Tile>().type == " ";
   }
 
   public void add_actor(Vector2 grid_location, Transform transform) {
