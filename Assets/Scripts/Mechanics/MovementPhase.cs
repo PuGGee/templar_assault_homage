@@ -47,7 +47,12 @@ public class MovementPhase : Phase {
   }
 
   protected bool valid_move(Vector2 current_grid_location, Vector2 new_grid_location, int movement) {
-    var distance = current_grid_location - new_grid_location;
-    return Mathf.Abs(distance.x) + Mathf.Abs(distance.y) <= movement;
+    var path_finder = new PathFinder(
+      map,
+      current_grid_location,
+      new List<Vector2> { new_grid_location }
+    );
+    var path = path_finder.find_path();
+    return path.Count - 1 <= movement;
   }
 }
