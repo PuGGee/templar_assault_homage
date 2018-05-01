@@ -1,8 +1,8 @@
-xxxx xxx
-xxxx xxx
-xxxx xxx
-     xxx
-xxxx xxx
-xxxx   x
-xx   xxx
-xx xxxxx
+xxxx xxxx     x
+xxxx x    xx xx
+xxxx x xx xx  x
+     x x    x x
+xxxx xxx  x   x
+xxxx      xxxxx
+xx   xxx     xx
+xx xxxxx  xx xx
