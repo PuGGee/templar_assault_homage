@@ -4,9 +4,11 @@ using System.Collections;
 public class Templar : Actor {
 
   public const int UP = 0;
-  public const int DOWN = 1;
-  public const int LEFT = 2;
+  public const int DOWN = 2;
+  public const int LEFT = 1;
   public const int RIGHT = 3;
+
+  public SpriteRenderer scanner;
 
   public int vitality;
   public int armour;
@@ -21,6 +23,8 @@ public class Templar : Actor {
   private int _moved;
 
   private int _direction;
+
+  private Coroutine co;
 
   public int shots_fired {
     get {
@@ -56,6 +60,10 @@ public class Templar : Actor {
 
   public void turn_to(int direction) {
     _direction = direction;
+    scanner.enabled = true;
+    transform.rotation = Quaternion.Euler(0, 0, _direction * 90);
+    if (co != null) StopCoroutine(co);
+    co = StartCoroutine(disable_scanner());
   }
 
   public bool within_arc(Vector2 current_grid_location, Vector2 grid_location) {
@@ -79,5 +87,10 @@ public class Templar : Actor {
   public void hurt(int amount) {
     _health -= amount;
     Debug.Log("reduced to " + _health + " health");
+  }
+
+  IEnumerator disable_scanner() {
+    yield return new WaitForSeconds(1);
+    scanner.enabled = false;
   }
 }
