@@ -6,7 +6,10 @@ public class TileGenerator : MonoBehaviour {
   public TextAsset map_file;
   public Transform tile_prefab;
   public Transform tile_container;
-  public Transform map;
+  public Map map;
+
+  public Transform templar_transform;
+  public Transform alien_transform;
 
   public Sprite empty_tile;
   public Sprite wall_tile;
@@ -32,22 +35,50 @@ public class TileGenerator : MonoBehaviour {
     tile_transform.localPosition = MapHelper.grid_to_world_location(location);
 
     var script = tile_transform.GetComponent<Tile>();
-    script.type = tile_type;
+    script.type = tile_type == "t" ? " " : tile_type;
     script.grid_location = location;
 
     SpriteRenderer sprite_renderer = tile_transform.GetComponent<SpriteRenderer>();
     sprite_renderer.sprite = sprite_for(tile_type);
 
-    map.GetComponent<Map>().add_tile(location, tile_transform);
+    map.add_tile(location, tile_transform);
+
+    if (tile_type == "t") {
+      spawn_templar(location);
+    }
   }
 
   private Sprite sprite_for(string token) {
     if (token == "x") {
       return wall_tile;
-    } else if (token == " ") {
+    } else if (token == " " || token == "t") {
       return empty_tile;
     } else {
       return null;
     }
+  }
+
+  private Transform spawn_templar(Vector2 grid_location) {
+    var templar = Instantiate(templar_transform) as Transform;
+    map.add_actor(grid_location, templar);
+    templar.parent = transform;
+    templar.localPosition = MapHelper.grid_to_world_location(grid_location);
+
+    var script = templar.GetComponent<Templar>();
+    script.map = map;
+
+    return templar;
+  }
+
+  private Transform spawn_alien(Vector2 grid_location) {
+    var alien = Instantiate(alien_transform) as Transform;
+    map.add_actor(grid_location, alien);
+    alien.parent = transform;
+    alien.localPosition = MapHelper.grid_to_world_location(grid_location);
+
+    var script = alien.GetComponent<Alien>();
+    script.map = map;
+
+    return alien;
   }
 }
