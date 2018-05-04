@@ -46,6 +46,10 @@ public class MovementPhase : Phase {
     return new ShootingPhase(map);
   }
 
+  public override bool can_progress() {
+    return true;
+  }
+
   protected bool valid_move(Vector2 current_grid_location, Vector2 new_grid_location, int movement) {
     var path_finder = new PathFinder(
       map,

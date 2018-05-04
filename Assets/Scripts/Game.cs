@@ -34,9 +34,13 @@ public class Game : MonoBehaviour {
 
   void Update() {
     if (Input.GetKeyDown("n")) {
-      _phase = _phase.next_phase();
-      foreach (var templar in map.templars()) {
-        templar.reset_turn();
+      if (_phase.can_progress()) {
+        _phase = _phase.next_phase();
+        foreach (var templar in map.templars()) {
+          templar.reset_turn();
+        }
+      } else {
+        _phase.keypress("n");
       }
     }
 

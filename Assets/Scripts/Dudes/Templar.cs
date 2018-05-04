@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Templar : MonoBehaviour {
+public class Templar : Actor {
 
   public const int UP = 0;
   public const int DOWN = 1;
@@ -21,10 +21,6 @@ public class Templar : MonoBehaviour {
   private int _moved;
 
   private int _direction;
-
-  public Map map {
-    get; set;
-  }
 
   public int shots_fired {
     get {
@@ -47,12 +43,6 @@ public class Templar : MonoBehaviour {
   void Start() {
     _health = vitality;
     reset_turn();
-  }
-
-  public void move(Vector2 current_grid_location, Vector2 new_grid_location) {
-    map.move_actor(current_grid_location, new_grid_location);
-    transform.localPosition = MapHelper.grid_to_world_location(new_grid_location);
-    _moved++;
   }
 
   public void reset_turn() {
@@ -79,5 +69,15 @@ public class Templar : MonoBehaviour {
     } else {
       return distance.x < 0 && Mathf.Abs(distance.y) <= Mathf.Abs(distance.x);
     }
+  }
+
+  public override void move(Vector2 current_grid_location, Vector2 new_grid_location) {
+    base.move(current_grid_location, new_grid_location);
+    _moved++;
+  }
+
+  public void hurt(int amount) {
+    _health -= amount;
+    Debug.Log("reduced to " + _health + " health");
   }
 }

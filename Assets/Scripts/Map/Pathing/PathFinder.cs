@@ -101,7 +101,7 @@ public class PathFinder {
     return _grid.location_pathable(new Vector2(x, y));
   }
 
-  public class Node {
+  private class Node {
 
     private Vector2 _square;
     private Node _previous_node;
