@@ -57,6 +57,6 @@ public class MovementPhase : Phase {
       new List<Vector2> { new_grid_location }
     );
     var path = path_finder.find_path();
-    return path.Count - 1 <= movement;
+    return path.Count <= movement;
   }
 }

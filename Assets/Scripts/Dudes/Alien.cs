@@ -66,6 +66,10 @@ public class Alien : Actor {
   }
 
   private Templar templar_at(float x, float y) {
-    return map.get_actor_at(new Vector2(x, y)).GetComponent<Templar>();
+    var actor = map.get_actor_at(new Vector2(x, y));
+    if (actor != null) {
+      return actor.GetComponent<Templar>();
+    }
+    return null;
   }
 }
