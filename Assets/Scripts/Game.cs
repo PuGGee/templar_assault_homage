@@ -5,7 +5,11 @@ public class Game : MonoBehaviour {
 
   public Transform map_transform;
 
+  public Transform tile_gen;
+
   private Phase _phase;
+
+  private const float MAP_MOVE = 0.1f;
 
   private Map map {
     get {
@@ -51,6 +55,23 @@ public class Game : MonoBehaviour {
     }
     if (Input.GetKeyDown("d")) {
       _phase.keypress("d");
+    }
+
+    if (Input.GetKey("t")) {
+      map_transform.position -= new Vector3(0, MAP_MOVE, 0);
+      tile_gen.position -= new Vector3(0, MAP_MOVE, 0);
+    }
+    if (Input.GetKey("f")) {
+      map_transform.position -= new Vector3(-MAP_MOVE, 0, 0);
+      tile_gen.position -= new Vector3(-MAP_MOVE, 0, 0);
+    }
+    if (Input.GetKey("h")) {
+      map_transform.position -= new Vector3(MAP_MOVE, 0, 0);
+      tile_gen.position -= new Vector3(MAP_MOVE, 0, 0);
+    }
+    if (Input.GetKey("g")) {
+      map_transform.position -= new Vector3(0, -MAP_MOVE, 0);
+      tile_gen.position -= new Vector3(0, -MAP_MOVE, 0);
     }
   }
 
