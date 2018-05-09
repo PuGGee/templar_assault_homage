@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Map : MonoBehaviour, IPathable {
+public class Map : MonoBehaviour, IPathable, ISpawnable {
+
+  public TileGenerator tile_gen;
 
   private Dictionary<int, Dictionary<int, Transform>> _grid;
   private Dictionary<int, Dictionary<int, Transform>> _actors;
@@ -22,10 +24,6 @@ public class Map : MonoBehaviour, IPathable {
   void Awake() {
     _grid = new Dictionary<int, Dictionary<int, Transform>>();
     _actors = new Dictionary<int, Dictionary<int, Transform>>();
-  }
-
-  void Start() {
-    transform.localPosition = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 20));
   }
 
   public void add_tile(Vector2 grid_location, Transform transform) {
@@ -50,6 +48,41 @@ public class Map : MonoBehaviour, IPathable {
   public bool location_pathable(Vector2 grid_location) {
     var tile = get_tile_at(grid_location);
     return tile != null && tile.GetComponent<Tile>().type == " ";
+  }
+
+  public bool location_spawnable(Vector2 grid_location) {
+    return location_pathable(grid_location);
+  }
+
+  public void test(List<Vector2> possible_spawn_locations) {
+    Debug.Log(possible_spawn_locations.Count);
+    foreach (var grid_location in possible_spawn_locations) {
+      var world_location = MapHelper.grid_to_world_location(grid_location) + new Vector2(transform.position.x, transform.position.y);
+      Debug.Log("first line");
+      Debug.Log(new Vector3(world_location.x - 0.5f, world_location.y - 0.5f));
+      Debug.Log(new Vector3(world_location.x + 0.5f, world_location.y + 0.5f));
+      Debug.Log("second line");
+      Debug.Log(new Vector3(world_location.x + 0.5f, world_location.y - 0.5f));
+      Debug.Log(new Vector3(world_location.x - 0.5f, world_location.y + 0.5f));
+      Debug.DrawLine(
+        new Vector3(world_location.x - 0.5f, world_location.y - 0.5f, 0),
+        new Vector3(world_location.x + 0.5f, world_location.y + 0.5f, 0),
+        Color.red,
+        2f,
+        false
+      );
+      Debug.DrawLine(
+        new Vector3(world_location.x + 0.5f, world_location.y - 0.5f, 0),
+        new Vector3(world_location.x - 0.5f, world_location.y + 0.5f, 0),
+        Color.red,
+        2f,
+        false
+      );
+    }
+  }
+
+  public void spawn(Vector2 grid_location) {
+    tile_gen.spawn_alien(grid_location);
   }
 
   public void add_actor(Vector2 grid_location, Transform transform) {

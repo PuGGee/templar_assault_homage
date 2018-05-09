@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Game : MonoBehaviour {
 
@@ -30,6 +31,12 @@ public class Game : MonoBehaviour {
 
   void click(Vector2 grid_location) {
     _phase.click(grid_location);
+    var dir = new Director(map);
+    var player_positions = new List<Vector2>();
+    foreach (var templar in map.templars()) {
+      player_positions.Add(map.actor_location(templar.transform));
+    }
+    dir.test(player_positions);
   }
 
   void Update() {

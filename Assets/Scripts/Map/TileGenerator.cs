@@ -70,7 +70,7 @@ public class TileGenerator : MonoBehaviour {
     return templar;
   }
 
-  private Transform spawn_alien(Vector2 grid_location) {
+  public Transform spawn_alien(Vector2 grid_location) {
     var alien = Instantiate(alien_transform) as Transform;
     map.add_actor(grid_location, alien);
     alien.parent = transform;
