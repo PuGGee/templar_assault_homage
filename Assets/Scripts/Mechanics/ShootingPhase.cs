@@ -12,6 +12,7 @@ public class ShootingPhase : Phase {
   private List<Vector2> templar_positions;
 
   public const int ENEMY_MOVE = 4;
+  public const int FOG_DISTANCE = 8;
 
   public ShootingPhase(Map map) : base(map) {
     _move_counter = 0;
@@ -29,6 +30,8 @@ public class ShootingPhase : Phase {
       if (templar != null) {
         _selected_unit = templar;
         _selected_square = grid_location;
+        map.clean_tiles();
+        highlight_targets();
       } else {
         var alien = target.GetComponent<Alien>();
         if (alien != null && _selected_unit != null && can_shoot(_selected_unit) && _selected_unit.within_arc(_selected_square, grid_location)) {
@@ -52,6 +55,7 @@ public class ShootingPhase : Phase {
   }
 
   public override Phase next_phase() {
+    map.clean_tiles();
     return new MovementPhase(map);
   }
 
@@ -81,12 +85,38 @@ public class ShootingPhase : Phase {
       }
       slice.Reverse();
 
+      var new_position = position;
+
       foreach (var slice_pos in slice) {
         if (map.get_actor_at(slice_pos) == null) {
           alien.move(position, slice_pos);
-          alien.attack(slice_pos);
+          new_position = slice_pos;
+          if (in_fog(slice_pos)) {
+            alien.hide();
+          } else {
+            alien.show();
+          }
           break;
         }
+      }
+      alien.attack(new_position);
+    }
+  }
+
+  private bool in_fog(Vector2 location) {
+    bool result = true;
+    foreach (var player_location in templar_positions) {
+      var dist = Mathf.Abs(location.x - player_location.x) + Mathf.Abs(location.y - player_location.y);
+      if (dist < FOG_DISTANCE) result = false;
+    }
+    return result;
+  }
+
+  private void highlight_targets() {
+    foreach (var alien in map.aliens()) {
+      var pos = map.actor_location(alien.transform);
+      if (!in_fog(pos) && _selected_unit.within_arc(_selected_square, pos)) {
+        map.highlight_tile_at(pos);
       }
     }
   }

@@ -5,6 +5,7 @@ public class Tile : MonoBehaviour {
 
   public delegate void ClickedAction(Vector2 location);
   public event ClickedAction OnClick;
+  public SpriteRenderer sprite_renderer;
 
   public string type {
     get; set;
@@ -14,9 +15,17 @@ public class Tile : MonoBehaviour {
     get; set;
   }
 
+  public bool is_spawner {
+    get; set;
+  }
+
   void OnMouseDown() {
     if (OnClick != null) {
       OnClick(grid_location);
     }
+  }
+
+  public bool is_open() {
+    return type == " ";
   }
 }

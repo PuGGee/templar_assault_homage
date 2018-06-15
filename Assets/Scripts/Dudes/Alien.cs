@@ -12,8 +12,18 @@ public class Alien : Actor {
 
   private int _health;
 
+  public SpriteRenderer sprite_renderer;
+
   void Start() {
     _health = vitality;
+  }
+
+  public void hide() {
+    sprite_renderer.enabled = false;
+  }
+
+  public void show() {
+    sprite_renderer.enabled = true;
   }
 
   public void attack(Vector2 current_location) {
@@ -32,7 +42,6 @@ public class Alien : Actor {
   }
 
   private void die(Vector2 current_location) {
-      Debug.Log("I'm dead!");
       map.remove_actor_at(current_location);
       Destroy(gameObject);
   }

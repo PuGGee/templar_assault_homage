@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,6 +12,8 @@ public class Game : MonoBehaviour {
   private Phase _phase;
 
   private const float MAP_MOVE = 0.1f;
+
+  public Text stage_text;
 
   private Map map {
     get {
@@ -31,26 +34,31 @@ public class Game : MonoBehaviour {
 
   void click(Vector2 grid_location) {
     _phase.click(grid_location);
-    var dir = new Director(map);
-    var player_positions = new List<Vector2>();
-    foreach (var templar in map.templars()) {
-      player_positions.Add(map.actor_location(templar.transform));
+  }
+
+  public void next_phase() {
+    if (_phase.can_progress()) {
+      _phase = _phase.next_phase();
+      var dir = new Director(map);
+      var player_positions = new List<Vector2>();
+      foreach (var templar in map.templars()) {
+        player_positions.Add(map.actor_location(templar.transform));
+      }
+      dir.spawn_aliens(player_positions);
+      foreach (var templar in map.templars()) {
+        templar.reset_turn();
+      }
+    } else {
+      _phase.keypress("n");
     }
-    dir.test(player_positions);
+    if (_phase.can_progress()) {
+      stage_text.text = "Next Phase";
+    } else {
+      stage_text.text = "Continue";
+    }
   }
 
   void Update() {
-    if (Input.GetKeyDown("n")) {
-      if (_phase.can_progress()) {
-        _phase = _phase.next_phase();
-        foreach (var templar in map.templars()) {
-          templar.reset_turn();
-        }
-      } else {
-        _phase.keypress("n");
-      }
-    }
-
     if (Input.GetKeyDown("w")) {
       _phase.keypress("w");
     }

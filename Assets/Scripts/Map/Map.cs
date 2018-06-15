@@ -45,40 +45,17 @@ public class Map : MonoBehaviour, IPathable, ISpawnable {
     }
   }
 
+  public List<Vector2> spawn_locations() {
+    var result = new List<Vector2>();
+    foreach (var tile in tiles()) {
+      if (tile.is_spawner) result.Add(tile.grid_location);
+    }
+    return result;
+  }
+
   public bool location_pathable(Vector2 grid_location) {
     var tile = get_tile_at(grid_location);
     return tile != null && tile.GetComponent<Tile>().type == " ";
-  }
-
-  public bool location_spawnable(Vector2 grid_location) {
-    return location_pathable(grid_location);
-  }
-
-  public void test(List<Vector2> possible_spawn_locations) {
-    Debug.Log(possible_spawn_locations.Count);
-    foreach (var grid_location in possible_spawn_locations) {
-      var world_location = MapHelper.grid_to_world_location(grid_location) + new Vector2(transform.position.x, transform.position.y);
-      Debug.Log("first line");
-      Debug.Log(new Vector3(world_location.x - 0.5f, world_location.y - 0.5f));
-      Debug.Log(new Vector3(world_location.x + 0.5f, world_location.y + 0.5f));
-      Debug.Log("second line");
-      Debug.Log(new Vector3(world_location.x + 0.5f, world_location.y - 0.5f));
-      Debug.Log(new Vector3(world_location.x - 0.5f, world_location.y + 0.5f));
-      Debug.DrawLine(
-        new Vector3(world_location.x - 0.5f, world_location.y - 0.5f, 0),
-        new Vector3(world_location.x + 0.5f, world_location.y + 0.5f, 0),
-        Color.red,
-        2f,
-        false
-      );
-      Debug.DrawLine(
-        new Vector3(world_location.x + 0.5f, world_location.y - 0.5f, 0),
-        new Vector3(world_location.x - 0.5f, world_location.y + 0.5f, 0),
-        Color.red,
-        2f,
-        false
-      );
-    }
   }
 
   public void spawn(Vector2 grid_location) {
@@ -170,5 +147,18 @@ public class Map : MonoBehaviour, IPathable, ISpawnable {
       }
     }
     return result;
+  }
+
+  public void clean_tiles() {
+    foreach (var tile in tiles()) {
+      tile.sprite_renderer.color = Color.white;
+    }
+  }
+
+  public void highlight_tile_at(Vector2 location) {
+    var tile_transform = get_tile_at(location);
+    if (tile_transform != null) {
+      tile_transform.GetComponent<Tile>().sprite_renderer.color = Color.red;
+    }
   }
 }

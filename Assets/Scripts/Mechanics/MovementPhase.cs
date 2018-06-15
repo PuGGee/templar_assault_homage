@@ -12,6 +12,7 @@ public class MovementPhase : Phase {
   }
 
   public override void click(Vector2 grid_location) {
+    map.clean_tiles();
     var target = map.get_actor_at(grid_location);
     var tile = map.get_tile_at(grid_location);
     if (target != null) {
@@ -19,6 +20,7 @@ public class MovementPhase : Phase {
       if (templar != null) {
         _selected_unit = templar;
         _selected_grid_location = grid_location;
+        highlight_move_locations();
       }
     } else {
       if (_selected_unit != null) {
@@ -43,6 +45,7 @@ public class MovementPhase : Phase {
   }
 
   public override Phase next_phase() {
+    map.clean_tiles();
     return new ShootingPhase(map);
   }
 
@@ -58,5 +61,13 @@ public class MovementPhase : Phase {
     );
     var path = path_finder.find_path();
     return path.Count <= movement;
+  }
+
+  private void highlight_move_locations() {
+    foreach (var tile in map.tiles()) {
+      if (tile.is_open() && valid_move(_selected_grid_location, tile.grid_location, _selected_unit.movement)) {
+        map.highlight_tile_at(tile.grid_location);
+      }
+    }
   }
 }

@@ -35,8 +35,11 @@ public class TileGenerator : MonoBehaviour {
     tile_transform.localPosition = MapHelper.grid_to_world_location(location);
 
     var script = tile_transform.GetComponent<Tile>();
-    script.type = tile_type == "t" ? " " : tile_type;
+    script.type = tile_type == "t" || tile_type == "s" ? " " : tile_type;
     script.grid_location = location;
+    if (tile_type == "s") {
+      script.is_spawner = true;
+    }
 
     SpriteRenderer sprite_renderer = tile_transform.GetComponent<SpriteRenderer>();
     sprite_renderer.sprite = sprite_for(tile_type);
