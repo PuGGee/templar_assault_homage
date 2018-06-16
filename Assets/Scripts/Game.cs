@@ -11,7 +11,7 @@ public class Game : MonoBehaviour {
 
   private Phase _phase;
 
-  private const float MAP_MOVE = 0.1f;
+  private const float MAP_MOVE = 0.2f;
 
   public Text stage_text;
 
@@ -45,9 +45,6 @@ public class Game : MonoBehaviour {
         player_positions.Add(map.actor_location(templar.transform));
       }
       dir.spawn_aliens(player_positions);
-      foreach (var templar in map.templars()) {
-        templar.reset_turn();
-      }
     } else {
       _phase.keypress("n");
     }

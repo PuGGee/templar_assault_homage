@@ -34,7 +34,7 @@ public class ShootingPhase : Phase {
         highlight_targets();
       } else {
         var alien = target.GetComponent<Alien>();
-        if (alien != null && _selected_unit != null && can_shoot(_selected_unit) && _selected_unit.within_arc(_selected_square, grid_location)) {
+        if (alien != null && _selected_unit != null && _selected_unit.can_shoot() && _selected_unit.within_arc(_selected_square, grid_location)) {
           shoot(grid_location, _selected_unit, alien);
         } else {
           Debug.Log("Invalid target");
@@ -56,6 +56,9 @@ public class ShootingPhase : Phase {
 
   public override Phase next_phase() {
     map.clean_tiles();
+    foreach (var templar in map.templars()) {
+      templar.reset_turn();
+    }
     return new MovementPhase(map);
   }
 
@@ -64,10 +67,6 @@ public class ShootingPhase : Phase {
 
     var damage = new Damage(shooter.damage, target.armour, shooter.accuracy).calculate();
     target.hurt(grid_location, damage);
-  }
-
-  private bool can_shoot(Templar shooter) {
-    return shooter.shots_fired < shooter.shots;
   }
 
   private void move_aliens() {

@@ -9,6 +9,7 @@ public class Templar : Actor {
   public const int RIGHT = 3;
 
   public SpriteRenderer scanner;
+  public SpriteRenderer bullets;
 
   public int vitality;
   public int armour;
@@ -52,10 +53,18 @@ public class Templar : Actor {
   public void reset_turn() {
     _moved = 0;
     _shots_fired = 0;
+    bullets.enabled = true;
   }
 
   public void shoot() {
     _shots_fired++;
+    if (!can_shoot()) {
+      bullets.enabled = false;
+    }
+  }
+
+  public bool can_shoot() {
+    return _moved > 0 && _shots_fired < shots || _moved == 0 && _shots_fired < 2 * shots;
   }
 
   public void turn_to(int direction) {
@@ -75,7 +84,7 @@ public class Templar : Actor {
     } else if (_direction == LEFT) {
       return distance.x < 0 && Mathf.Abs(distance.y) <= Mathf.Abs(distance.x);
     } else {
-      return distance.x < 0 && Mathf.Abs(distance.y) <= Mathf.Abs(distance.x);
+      return distance.x > 0 && Mathf.Abs(distance.y) <= Mathf.Abs(distance.x);
     }
   }
 
