@@ -55,11 +55,26 @@ public class Map : MonoBehaviour, IPathable, ISpawnable {
 
   public bool location_pathable(Vector2 grid_location) {
     var tile = get_tile_at(grid_location);
-    return tile != null && tile.GetComponent<Tile>().type == " ";
+    return tile != null &&
+           tile.GetComponent<Tile>().type == " ";
+  }
+  
+  public bool location_spawnable(Vector2 grid_location) {
+    return location_pathable(grid_location) && get_actor_at(grid_location) == null;
   }
 
   public void spawn(Vector2 grid_location) {
     tile_gen.spawn_alien(grid_location);
+  }
+  
+  public float blockage(Vector2 grid_location) {
+    if (get_actor_at(grid_location) != null) {
+      return 0.35f;
+    } else if (location_pathable(grid_location)) {
+      return 0f;
+    } else {
+      return 1f;
+    }
   }
 
   public void add_actor(Vector2 grid_location, Transform transform) {

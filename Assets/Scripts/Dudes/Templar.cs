@@ -10,6 +10,8 @@ public class Templar : Actor {
 
   public SpriteRenderer scanner;
   public SpriteRenderer bullets;
+  public RectTransform health_sprite;
+  public TextMesh health_text;
 
   public int vitality;
   public int armour;
@@ -18,6 +20,7 @@ public class Templar : Actor {
   public int shots;
   public int damage;
   public int accuracy;
+  public int range;
 
   private int _health;
   private int _shots_fired;
@@ -71,11 +74,17 @@ public class Templar : Actor {
     _direction = direction;
     scanner.enabled = true;
     transform.rotation = Quaternion.Euler(0, 0, _direction * 90);
+    health_sprite.rotation = Quaternion.Euler(0, 0, 0);
     if (co != null) StopCoroutine(co);
     co = StartCoroutine(disable_scanner());
   }
 
   public bool within_arc(Vector2 current_grid_location, Vector2 grid_location) {
+    var los = new LineOfSight(current_grid_location, grid_location, map);
+    if (los.blocked()) return false;
+    
+    var dist = Mathf.Abs(current_grid_location.x - grid_location.x) + Mathf.Abs(current_grid_location.y - grid_location.y);
+    if (dist > range) return false;
     var distance = grid_location - current_grid_location;
     if (_direction == UP) {
       return distance.y > 0 && Mathf.Abs(distance.x) <= Mathf.Abs(distance.y);
@@ -95,7 +104,8 @@ public class Templar : Actor {
 
   public void hurt(int amount) {
     _health -= amount;
-    Debug.Log("reduced to " + _health + " health");
+    health_text.text = _health.ToString();
+    if (_health <= 0) die();
   }
 
   IEnumerator disable_scanner() {

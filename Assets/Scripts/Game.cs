@@ -39,12 +39,6 @@ public class Game : MonoBehaviour {
   public void next_phase() {
     if (_phase.can_progress()) {
       _phase = _phase.next_phase();
-      var dir = new Director(map);
-      var player_positions = new List<Vector2>();
-      foreach (var templar in map.templars()) {
-        player_positions.Add(map.actor_location(templar.transform));
-      }
-      dir.spawn_aliens(player_positions);
     } else {
       _phase.keypress("n");
     }

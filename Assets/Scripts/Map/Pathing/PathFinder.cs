@@ -22,6 +22,8 @@ public class PathFinder {
   }
 
   public List<Vector2> find_path() {
+    if (_targets.Contains(_start)) return new List<Vector2> { _start };
+    
     end_nodes.Add(new Node(_start, null, 0, 0));
     traversed_squares.Add(_start);
 

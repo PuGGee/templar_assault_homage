@@ -11,4 +11,9 @@ public class Actor : MonoBehaviour {
     map.move_actor(current_grid_location, new_grid_location);
     transform.localPosition = MapHelper.grid_to_world_location(new_grid_location);
   }
+  
+  public void die() {
+    map.remove_actor_at(map.actor_location(transform));
+    Destroy(gameObject);
+  }
 }

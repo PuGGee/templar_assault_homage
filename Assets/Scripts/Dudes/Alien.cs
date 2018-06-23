@@ -33,17 +33,12 @@ public class Alien : Actor {
     }
   }
 
-  public void hurt(Vector2 current_location, int amount) {
+  public void hurt(int amount) {
     _health -= amount;
     Debug.Log("reduced to " + _health + " health");
     if (_health <= 0) {
-      die(current_location);
+      die();
     }
-  }
-
-  private void die(Vector2 current_location) {
-      map.remove_actor_at(current_location);
-      Destroy(gameObject);
   }
 
   private int random_damage() {

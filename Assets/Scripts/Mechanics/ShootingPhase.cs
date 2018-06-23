@@ -59,14 +59,31 @@ public class ShootingPhase : Phase {
     foreach (var templar in map.templars()) {
       templar.reset_turn();
     }
+    spawn_aliens();
     return new MovementPhase(map);
+  }
+  
+  private void spawn_aliens() {
+    var dir = new Director(map);
+    var player_positions = new List<Vector2>();
+    foreach (var templar in map.templars()) {
+      player_positions.Add(map.actor_location(templar.transform));
+    }
+    dir.spawn_aliens(player_positions);
+    foreach (var alien in map.aliens()) {
+      if (in_fog(map.actor_location(alien.transform))) {
+        alien.hide();
+      } else {
+        alien.show();
+      }
+    }
   }
 
   private void shoot(Vector2 grid_location, Templar shooter, Alien target) {
     shooter.shoot();
 
     var damage = new Damage(shooter.damage, target.armour, shooter.accuracy).calculate();
-    target.hurt(grid_location, damage);
+    target.hurt(damage);
   }
 
   private void move_aliens() {
